@@ -39,5 +39,5 @@ Tensorboard training-logs are provided [here](./logs). Please note that the snap
 </p>
 
 # References
-This repository heavily relies on the ['Yet another EfficientDet in PyTorch' repo](https://github.com/zylo117/Yet-Another-EfficientDet-Pytorch).
+This repository is a finetune and adaptaion of the wonderful repository ['Yet another EfficientDet in PyTorch' repo](https://github.com/zylo117/Yet-Another-EfficientDet-Pytorch).
 
