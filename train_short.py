@@ -118,7 +118,9 @@ def train(opt):
 
     # Setup log-directories & training-parameters
     opt.saved_path = opt.saved_path + f"/{params.project_name}_D{opt.compound_coef}/"
-    opt.log_path = opt.log_path + f"/{params.project_name}_D{opt.compound_coef}/tensorboard/"
+    opt.log_path = (
+        opt.log_path + f"/{params.project_name}_D{opt.compound_coef}/tensorboard/"
+    )
     os.makedirs(opt.log_path, exist_ok=True)
     os.makedirs(opt.saved_path, exist_ok=True)
 
@@ -430,7 +432,7 @@ if __name__ == "__main__":
         "--optim",
         type=str,
         default="adamw",
-        help="Select the optimizer for training, AdamW or SGD"
+        help="Select the optimizer for training, AdamW or SGD",
     )
     parser.add_argument("--num_epochs", type=int, default=50)
     parser.add_argument(

@@ -21,7 +21,7 @@ total_ds_pics_train = 21000
 total_ds_pics_val = 4000
 canvas_size = 512
 img_size_x, img_size_y = 18 * 2, 25 * 2
-input_folder = "./bbg_numbers/"
+input_folder = "./images/"
 output_folder = "./datasets/letters_large/"
 visualize = False
 
