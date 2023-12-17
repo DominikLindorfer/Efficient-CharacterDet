@@ -1,0 +1,41 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[[source]]
+url = "https://download.pytorch.org/whl/cu118"
+verify_ssl = true
+name = "downloadpytorch"
+
+[[source]]
+url = "https://download.pytorch.org/whl/cu118"
+verify_ssl = true
+name = "downloadpytorch"
+
+[[source]]
+url = "https://download.pytorch.org/whl/cu118"
+verify_ssl = true
+name = "downloadpytorch"
+
+[packages]
+pycocotools = "*"
+numpy = "*"
+opencv-python = "*"
+tqdm = "*"
+tensorboard = "*"
+tensorboardx = "*"
+pyyaml = "*"
+webcolors = "*"
+matplotlib = "*"
+torch = {version = "*", index = "downloadpytorch"}
+torchvision = {version = "*", index = "downloadpytorch"}
+torchaudio = {version = "*", index = "downloadpytorch"}
+ipykernel = "*"
+pillow = "*"
+
+[dev-packages]
+torch-tb-profiler = "*"
+
+[requires]
+python_version = "3.9"
