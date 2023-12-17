@@ -12,8 +12,8 @@ from utils.utils import preprocess, invert_affine, postprocess
 compound_coef = 0
 force_input_size = None  # set None to use default size
 img_path = "datasets/numbers/val/1001.jpg"
-# weight_file = 'numbers/efficientdet-d0_69_2170.pth'
-weight_file = "numbers_ultra/efficientdet-d0_34_7105.pth"
+# weight_file = 'weights/numbers/efficientdet-d0_69_2170.pth'
+weight_file = "weights/numbers_ultra/efficientdet-d0_34_7105.pth"
 
 threshold = 0.2
 iou_threshold = 0.2
@@ -47,7 +47,7 @@ model = EfficientDetBackbone(
     scales=[2**0, 2 ** (1.0 / 3.0), 2 ** (2.0 / 3.0)],
 )
 
-model.load_state_dict(torch.load("logs/" + weight_file))
+model.load_state_dict(torch.load(weight_file))
 model.requires_grad_(False)
 model.eval()
 

@@ -12,7 +12,7 @@ from utils.utils import preprocess, invert_affine, postprocess
 compound_coef = 0
 force_input_size = None  # set None to use default size
 img_path = "datasets/numbers_comma_minus/val/8020.jpg"  # 8017
-weight_file = "numbers_comma_minus/efficientdet-d0_34_8700.pth"
+weight_file = "weights/numbers_comma_minus/efficientdet-d0_34_8700.pth"
 
 threshold = 0.2
 iou_threshold = 0.2

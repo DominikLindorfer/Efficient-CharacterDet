@@ -12,9 +12,9 @@ from utils.utils import preprocess, invert_affine, postprocess
 compound_coef = 0
 force_input_size = None  # set None to use default size
 img_path = "datasets/letters/val/8020.jpg"
-weight_file = "logs/letters_D0/efficientdet-d0_54_13700.pth"
+weight_file = "weights/letters_D0/efficientdet-d0_54_13700.pth"
 # img_path = "datasets/letters_large/val/21039.jpg" #  21019 21024
-# weight_file = "logs/letters_large_D0/efficientdet-d0_53_35400.pth"
+# weight_file = "weights/letters_large_D0/efficientdet-d0_53_35400.pth"
 
 threshold = 0.2
 iou_threshold = 0.2
