@@ -8,7 +8,7 @@ from perturbations import (
     get_largeint_as_picture,
     set_background_and_rotations,
     visualize_bboxes,
-    get_word_as_picture
+    get_word_as_picture,
 )
 import PIL.Image
 from copy import deepcopy
@@ -54,37 +54,51 @@ for i in range(65, 91):
 
 letters = [cv2.resize(i, (img_size_x, img_size_y)) for i in letters]
 
-def create_dataset(total_ds_pics, output_folder, letters, canvas_size, img_size_x, img_size_y, visualize=False, shift_imgoutput_numb=0):
+
+def create_dataset(
+    total_ds_pics,
+    output_folder,
+    letters,
+    canvas_size,
+    img_size_x,
+    img_size_y,
+    visualize=False,
+    shift_imgoutput_numb=0,
+):
     # Create Dataset of decimal numbers consisting of individual digits and decimal point
     id = 0
     annotations = []
     numb_distribution = {"rnd": 0, "neg": 0, "large": 0, "word": 0}
-    
+
     # load dictionary from file dictionary.txt
-    with open('dictionary.txt') as f:
+    with open("dictionary.txt") as f:
         dictionary = f.read().splitlines()
 
     pic_numb = 0
 
     while pic_numb < total_ds_pics:
         # Generate random float number between 10000 and 0 with random precision
-        
+
         get_word_or_num = random.random()
 
         if get_word_or_num <= 0.7:  # 13Numbers&specials vs. 26 letters
-        # if True:
+            # if True:
             # Get Word
             word = random.choice(dictionary)
             word = word.upper()
-            string_word_numb, pic_word_numb = get_word_as_picture(letters[count_numbers:], word)
+            string_word_numb, pic_word_numb = get_word_as_picture(
+                letters[count_numbers:], word
+            )
             letter_type = "word"
 
         else:
             # Get Number
             cutoff = random.random()
-            
-            if cutoff <= 0.2: 
-                string_word_numb, pic_word_numb = get_negative_rndnumbers_as_picture(letters)
+
+            if cutoff <= 0.2:
+                string_word_numb, pic_word_numb = get_negative_rndnumbers_as_picture(
+                    letters
+                )
                 letter_type = "neg"
             elif cutoff <= 0.4:
                 string_word_numb, pic_word_numb = get_largeint_as_picture(letters)
@@ -138,7 +152,7 @@ def create_dataset(total_ds_pics, output_folder, letters, canvas_size, img_size_
         if skip_image:
             print("Skipping Image: ", pic_numb, " due to BBox Size!")
             continue
-        
+
         # Count for Statistics
         numb_distribution[letter_type] += 1
 
@@ -179,21 +193,44 @@ def create_dataset(total_ds_pics, output_folder, letters, canvas_size, img_size_
         #     print(i)
         print("Saving Image: ", pic_numb)
         image = cv2.bitwise_not(np.asarray(bg_black_all))
-        cv2.imwrite(output_folder + str(pic_numb + shift_imgoutput_numb) + ".jpg", image)
+        cv2.imwrite(
+            output_folder + str(pic_numb + shift_imgoutput_numb) + ".jpg", image
+        )
         pic_numb += 1
 
     return annotations, numb_distribution
 
-annotations_train, numbers_distribution_train = create_dataset(total_ds_pics_train, output_folder + "train/", letters, canvas_size, img_size_x, img_size_y, visualize)
-annotations_val, numbers_distribution_val = create_dataset(total_ds_pics_val, output_folder + "val/", letters, canvas_size, img_size_x, img_size_y, visualize, total_ds_pics_train)
 
-def create_annotations_json(annotations, total_ds_pics, output_name, shift_imgoutput_numb=0):
+annotations_train, numbers_distribution_train = create_dataset(
+    total_ds_pics_train,
+    output_folder + "train/",
+    letters,
+    canvas_size,
+    img_size_x,
+    img_size_y,
+    visualize,
+)
+annotations_val, numbers_distribution_val = create_dataset(
+    total_ds_pics_val,
+    output_folder + "val/",
+    letters,
+    canvas_size,
+    img_size_x,
+    img_size_y,
+    visualize,
+    total_ds_pics_train,
+)
+
+
+def create_annotations_json(
+    annotations, total_ds_pics, output_name, shift_imgoutput_numb=0
+):
     # Additional Information according to COCO Style - various rnd / dummy choices
 
     categories = []
 
     for i in range(1, 11):
-        categories.append({"id": i, "name": str(i-1), "supercategory": None})
+        categories.append({"id": i, "name": str(i - 1), "supercategory": None})
 
     categories.append({"id": 11, "name": ".", "supercategory": None})
 
@@ -204,7 +241,7 @@ def create_annotations_json(annotations, total_ds_pics, output_name, shift_imgou
             {
                 "coco_url": "",
                 "date_captured": "2023-11-11 01:45:07.508146",
-                "file_name": str(i+shift_imgoutput_numb) + ".jpg",
+                "file_name": str(i + shift_imgoutput_numb) + ".jpg",
                 "flickr_url": "",
                 "height": 512,
                 "id": i,
@@ -225,19 +262,29 @@ def create_annotations_json(annotations, total_ds_pics, output_name, shift_imgou
     licenses = [{"id": 1, "name": None, "url": None}]
 
     numbers_dataset = {
-        "annotations" : annotations,
-        "categories" : categories,
-        "images" : images,
-        "info" : info,
-        "licenses" : licenses
+        "annotations": annotations,
+        "categories": categories,
+        "images": images,
+        "info": info,
+        "licenses": licenses,
     }
 
     # Save to json file
     with open(output_name, "w") as f:
         json.dump(numbers_dataset, f)
 
-create_annotations_json(annotations_train, total_ds_pics_train, output_folder + "annotations/instances_train.json")
-create_annotations_json(annotations_val, total_ds_pics_val, output_folder + "annotations/instances_val.json", total_ds_pics_train)
+
+create_annotations_json(
+    annotations_train,
+    total_ds_pics_train,
+    output_folder + "annotations/instances_train.json",
+)
+create_annotations_json(
+    annotations_val,
+    total_ds_pics_val,
+    output_folder + "annotations/instances_val.json",
+    total_ds_pics_train,
+)
 
 print("Numbers Distribution Training-Set: ", numbers_distribution_train)
 print("Numbers Distribution Validation-Set: ", numbers_distribution_val)

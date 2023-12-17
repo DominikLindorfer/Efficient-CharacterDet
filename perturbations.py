@@ -5,42 +5,48 @@ import PIL.Image
 
 # Alter Pictures to include perturbations, i.e. a black boarder as well as blurs etc.
 
+
 # Grayscale image
 def get_grayscale(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
+
 # Noise Removal
 def remove_noise(image, intensity=1):
     blured = cv2.medianBlur(image, intensity)
-    # blured = cv2.resize(blured, (image.shape[1], image.shape[0])) 
+    # blured = cv2.resize(blured, (image.shape[1], image.shape[0]))
     return blured
- 
+
+
 # Thresholding
 def thresholding(image):
     return cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
+
 # Dilation
 def dilate(image):
-    kernel = np.ones((5,5),np.uint8)
-    return cv2.dilate(image, kernel, iterations = 1)
-    
+    kernel = np.ones((5, 5), np.uint8)
+    return cv2.dilate(image, kernel, iterations=1)
+
+
 # Erosion
 def erode(image):
-    kernel = np.ones((5,5),np.uint8)
-    return cv2.erode(image, kernel, iterations = 1)
+    kernel = np.ones((5, 5), np.uint8)
+    return cv2.erode(image, kernel, iterations=1)
+
 
 # Opening - Erosion followed by Dilation
 def opening(image):
-    kernel = np.ones((5,5),np.uint8)
+    kernel = np.ones((5, 5), np.uint8)
     return cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
 
-def rnd_perturbations(rnd_numb_pic):
 
+def rnd_perturbations(rnd_numb_pic):
     for i, pic in enumerate(rnd_numb_pic):
         if random.random() > 0.2:
             # print("Blured Number: ", i)
             rnd_numb_pic[i] = remove_noise(pic)
-        
+
         if random.random() > 0.2:
             # print("Tresholded Number: ", i)
             rnd_numb_pic[i] = thresholding(pic)
@@ -51,11 +57,12 @@ def rnd_perturbations(rnd_numb_pic):
 
     return rnd_numb_pic
 
-def get_rndnumber_as_picture(numbers, max_number = 10000, max_prec = 3):
-    rnd_numb = random.random()*max_number
+
+def get_rndnumber_as_picture(numbers, max_number=10000, max_prec=3):
+    rnd_numb = random.random() * max_number
     prec = random.randint(1, max_prec)
 
-    rnd_numb_formated = "{rnd_numb:.{prec}f}".format(rnd_numb = rnd_numb, prec = prec)
+    rnd_numb_formated = "{rnd_numb:.{prec}f}".format(rnd_numb=rnd_numb, prec=prec)
     print(rnd_numb_formated, prec)
 
     # Patch together a picture of the number above (include perturbations here)
@@ -65,15 +72,16 @@ def get_rndnumber_as_picture(numbers, max_number = 10000, max_prec = 3):
         if i == ".":
             rnd_numb_pic.append(numbers[10])
         else:
-            rnd_numb_pic.append(numbers[int(i)]) 
-    
+            rnd_numb_pic.append(numbers[int(i)])
+
     return rnd_numb_formated, rnd_numb_pic
 
-def get_negative_rndnumbers_as_picture(numbers, max_number=1000, max_prec = 2):
-    rnd_numb = random.random()*max_number*(-1)
+
+def get_negative_rndnumbers_as_picture(numbers, max_number=1000, max_prec=2):
+    rnd_numb = random.random() * max_number * (-1)
     prec = random.randint(1, max_prec)
 
-    rnd_numb_formated = "{rnd_numb:.{prec}f}".format(rnd_numb = rnd_numb, prec = prec)
+    rnd_numb_formated = "{rnd_numb:.{prec}f}".format(rnd_numb=rnd_numb, prec=prec)
     print(rnd_numb_formated, prec)
 
     # Patch together a picture of the number above (include perturbations here)
@@ -85,83 +93,108 @@ def get_negative_rndnumbers_as_picture(numbers, max_number=1000, max_prec = 2):
         elif i == "-":
             rnd_numb_pic.append(numbers[12])
         else:
-            rnd_numb_pic.append(numbers[int(i)]) 
-    
+            rnd_numb_pic.append(numbers[int(i)])
+
     return rnd_numb_formated, rnd_numb_pic
 
-def get_largeint_as_picture(numbers, max_number=1e6):
-    rnd_numb = int(random.random()*max_number)
 
-    rnd_numb_formated = "{rnd_numb}".format(rnd_numb = rnd_numb)
+def get_largeint_as_picture(numbers, max_number=1e6):
+    rnd_numb = int(random.random() * max_number)
+
+    rnd_numb_formated = "{rnd_numb}".format(rnd_numb=rnd_numb)
     print(rnd_numb_formated)
 
     # Patch together a picture of the number above (include perturbations here)
     rnd_numb_pic = []
 
     for i, digit in enumerate(rnd_numb_formated):
-        
         if i == 3:
             rnd_numb_pic.append(numbers[11])
             rnd_numb_formated = rnd_numb_formated[:i] + "," + rnd_numb_formated[i:]
 
-        rnd_numb_pic.append(numbers[int(digit)]) 
-    
+        rnd_numb_pic.append(numbers[int(digit)])
+
     return list(reversed(rnd_numb_formated)), list(reversed(rnd_numb_pic))
 
+
 # Set on Background and Rotate? and save bounding-boxes
-def set_background_and_rotations(image, img_size_x, img_size_y, angle=0, sigma=0.15, multipl=100, resize_imgs=False):
+def set_background_and_rotations(
+    image, img_size_x, img_size_y, angle=0, sigma=0.15, multipl=100, resize_imgs=False
+):
     image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
     img_size_x = image.shape[1]
     img_size_y = image.shape[0]
 
     if resize_imgs:
         factor = min(0.6 + random.random(), 1.4)
-        img_size_x = int(img_size_x*factor)
-        img_size_y = int(img_size_y*factor)
+        img_size_x = int(img_size_x * factor)
+        img_size_y = int(img_size_y * factor)
         image = cv2.resize(image, (img_size_x, img_size_y))
 
-    image = PIL.Image.fromarray(np.uint8(image)).convert('RGB')
+    image = PIL.Image.fromarray(np.uint8(image)).convert("RGB")
 
-    rnd_coords = [np.abs(round(random.gauss(0, np.sqrt(sigma)) * multipl)) for i in range(4)]
+    rnd_coords = [
+        np.abs(round(random.gauss(0, np.sqrt(sigma)) * multipl)) for i in range(4)
+    ]
     # print(rnd_coords)
 
     # pw, ph = 64, 64
     pw, ph = rnd_coords[0], rnd_coords[1]
-    bg_black = PIL.Image.new("RGB", (pw+img_size_x, ph+img_size_y))
+    bg_black = PIL.Image.new("RGB", (pw + img_size_x, ph + img_size_y))
 
-    paste_pos = (min(rnd_coords[2], pw), min(rnd_coords[3], ph)) #must not exceed pw, ph
+    paste_pos = (
+        min(rnd_coords[2], pw),
+        min(rnd_coords[3], ph),
+    )  # must not exceed pw, ph
 
     bg_black.paste(image, paste_pos)
     bg_black = bg_black.rotate(angle)
 
     start_point = paste_pos
-    end_point = (img_size_x+paste_pos[0], img_size_y+paste_pos[1])
-    
+    end_point = (img_size_x + paste_pos[0], img_size_y + paste_pos[1])
+
     # DEBUG
-    # color = (255, 0, 0) 
+    # color = (255, 0, 0)
     # thickness = 2
-    # image = cv2.rectangle(np.asarray(bg_black), start_point, end_point, color, thickness) 
+    # image = cv2.rectangle(np.asarray(bg_black), start_point, end_point, color, thickness)
     # cv2.imshow("test.jpg", image)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
 
-    return np.asarray(bg_black), [start_point[0], start_point[1], end_point[0] - start_point[0], end_point[1] - start_point[1]]
+    return np.asarray(bg_black), [
+        start_point[0],
+        start_point[1],
+        end_point[0] - start_point[0],
+        end_point[1] - start_point[1],
+    ]
+
 
 def visualize_bboxes(image_bg, bboxes):
     for bbox in bboxes:
         start_point = (bbox[0], bbox[1])
-        end_point = (bbox[0]+bbox[2], bbox[1]+bbox[3])
+        end_point = (bbox[0] + bbox[2], bbox[1] + bbox[3])
 
-        color = (255, 0, 0) 
+        color = (255, 0, 0)
         thickness = 2
-        image = cv2.rectangle(np.asarray(image_bg), start_point, end_point, color, thickness) 
+        image = cv2.rectangle(
+            np.asarray(image_bg), start_point, end_point, color, thickness
+        )
 
         cv2.imshow("test.jpg", image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+
 # Parameters for annotations.json
-def create_dataset(total_ds_pics, output_folder, numbers, canvas_size, IMG_SIZE_X, IMG_SIZE_Y, visualize=False):
+def create_dataset(
+    total_ds_pics,
+    output_folder,
+    numbers,
+    canvas_size,
+    IMG_SIZE_X,
+    IMG_SIZE_Y,
+    visualize=False,
+):
     id = 0
     annotations = []
 
@@ -247,6 +280,7 @@ def create_dataset(total_ds_pics, output_folder, numbers, canvas_size, IMG_SIZE_
         image = cv2.bitwise_not(np.asarray(bg_black_all))
         cv2.imwrite(output_folder + str(pic_numb) + ".jpg", image)
         pic_numb += 1
+
 
 def get_word_as_picture(letters, word):
     word_pic = []

@@ -47,7 +47,17 @@ numbers.append(cv2.imread(input_folder + "comma.png", cv2.IMREAD_GRAYSCALE))
 numbers.append(cv2.imread(input_folder + "minus.png", cv2.IMREAD_GRAYSCALE))
 numbers = [cv2.resize(i, (img_size_x, img_size_y)) for i in numbers]
 
-def create_dataset(total_ds_pics, output_folder, numbers, canvas_size, img_size_x, img_size_y, visualize=False, shift_imgoutput_numb=0):
+
+def create_dataset(
+    total_ds_pics,
+    output_folder,
+    numbers,
+    canvas_size,
+    img_size_x,
+    img_size_y,
+    visualize=False,
+    shift_imgoutput_numb=0,
+):
     # Create Dataset of decimal numbers consisting of individual digits and decimal point
     id = 0
     annotations = []
@@ -57,10 +67,10 @@ def create_dataset(total_ds_pics, output_folder, numbers, canvas_size, img_size_
 
     while pic_numb < total_ds_pics:
         # Generate random float number between 10000 and 0 with random precision
-        
+
         cutoff = random.random()
-        
-        if cutoff <= 0.2: 
+
+        if cutoff <= 0.2:
             rnd_numb_form, rnd_numb_pic = get_negative_rndnumbers_as_picture(numbers)
             numb_type = "neg"
         elif cutoff <= 0.4:
@@ -115,7 +125,7 @@ def create_dataset(total_ds_pics, output_folder, numbers, canvas_size, img_size_
         if skip_image:
             print("Skipping Image: ", pic_numb, " due to BBox Size!")
             continue
-        
+
         # Count for Statistics
         numb_distribution[numb_type] += 1
 
@@ -151,21 +161,44 @@ def create_dataset(total_ds_pics, output_folder, numbers, canvas_size, img_size_
         #     print(i)
         print("Saving Image: ", pic_numb)
         image = cv2.bitwise_not(np.asarray(bg_black_all))
-        cv2.imwrite(output_folder + str(pic_numb + shift_imgoutput_numb) + ".jpg", image)
+        cv2.imwrite(
+            output_folder + str(pic_numb + shift_imgoutput_numb) + ".jpg", image
+        )
         pic_numb += 1
 
     return annotations, numb_distribution
 
-annotations_train, numbers_distribution_train = create_dataset(total_ds_pics_train, output_folder + "train/", numbers, canvas_size, img_size_x, img_size_y, visualize)
-annotations_val, numbers_distribution_val = create_dataset(total_ds_pics_val, output_folder + "val/", numbers, canvas_size, img_size_x, img_size_y, visualize, total_ds_pics_train)
 
-def create_annotations_json(annotations, total_ds_pics, output_name, shift_imgoutput_numb=0):
+annotations_train, numbers_distribution_train = create_dataset(
+    total_ds_pics_train,
+    output_folder + "train/",
+    numbers,
+    canvas_size,
+    img_size_x,
+    img_size_y,
+    visualize,
+)
+annotations_val, numbers_distribution_val = create_dataset(
+    total_ds_pics_val,
+    output_folder + "val/",
+    numbers,
+    canvas_size,
+    img_size_x,
+    img_size_y,
+    visualize,
+    total_ds_pics_train,
+)
+
+
+def create_annotations_json(
+    annotations, total_ds_pics, output_name, shift_imgoutput_numb=0
+):
     # Additional Information according to COCO Style - various rnd / dummy choices
 
     categories = []
 
     for i in range(1, 11):
-        categories.append({"id": i, "name": str(i-1), "supercategory": None})
+        categories.append({"id": i, "name": str(i - 1), "supercategory": None})
 
     categories.append({"id": 11, "name": ".", "supercategory": None})
 
@@ -176,7 +209,7 @@ def create_annotations_json(annotations, total_ds_pics, output_name, shift_imgou
             {
                 "coco_url": "",
                 "date_captured": "2023-11-11 01:45:07.508146",
-                "file_name": str(i+shift_imgoutput_numb) + ".jpg",
+                "file_name": str(i + shift_imgoutput_numb) + ".jpg",
                 "flickr_url": "",
                 "height": 512,
                 "id": i,
@@ -197,19 +230,29 @@ def create_annotations_json(annotations, total_ds_pics, output_name, shift_imgou
     licenses = [{"id": 1, "name": None, "url": None}]
 
     numbers_dataset = {
-        "annotations" : annotations,
-        "categories" : categories,
-        "images" : images,
-        "info" : info,
-        "licenses" : licenses
+        "annotations": annotations,
+        "categories": categories,
+        "images": images,
+        "info": info,
+        "licenses": licenses,
     }
 
     # Save to json file
     with open(output_name, "w") as f:
         json.dump(numbers_dataset, f)
 
-create_annotations_json(annotations_train, total_ds_pics_train, output_folder + "annotations/instances_train.json")
-create_annotations_json(annotations_val, total_ds_pics_val, output_folder + "annotations/instances_val.json", total_ds_pics_train)
+
+create_annotations_json(
+    annotations_train,
+    total_ds_pics_train,
+    output_folder + "annotations/instances_train.json",
+)
+create_annotations_json(
+    annotations_val,
+    total_ds_pics_val,
+    output_folder + "annotations/instances_val.json",
+    total_ds_pics_train,
+)
 
 print("Numbers Distribution Training-Set: ", numbers_distribution_train)
 print("Numbers Distribution Validation-Set: ", numbers_distribution_val)
