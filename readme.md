@@ -28,7 +28,7 @@ This project uses the standard anchor scales/ratios as well as RGB mean and std 
 ### EfficientDet Finetuning Procedure
 
 I use the [COCO](https://cocodataset.org/) pretrained EfficientDet weights (pyTorch .pth) provided [here](https://github.com/zylo117/Yet-Another-EfficientDet-Pytorch/releases/tag/1.0) and finetune on the datasets provided above. I use a two-step training process, where in the first step the [EfficentNet backbone](https://arxiv.org/pdf/1905.11946.pdf) is frozen and only the head, i.e. the BiFPN layers as well as the 
-Class/Box prediction net layers are trained. In the second step also the backbone layers are trainable. Provided below are the detailed training parameters for each CharacterDet downloadable from [here](/releases). All other parameters are chosen according to the [EfficientDet paper](https://arxiv.org/abs/1911.09070). Training is conducted on a single A100 40GB GPU.
+Class/Box prediction net layers are trained. In the second step also the backbone layers are trainable. Provided below are the detailed training parameters for each CharacterDet downloadable from [here](https://github.com/DominikLindorfer/Efficient-CharacterDet/releases). All other parameters are chosen according to the [EfficientDet paper](https://arxiv.org/abs/1911.09070). Training is conducted on a single A100 40GB GPU.
 
 TABLE
 
