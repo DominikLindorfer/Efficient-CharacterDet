@@ -30,7 +30,12 @@ This project uses the standard anchor scales/ratios as well as RGB mean and std 
 I use the [COCO](https://cocodataset.org/) pretrained EfficientDet weights (pyTorch .pth) provided [here](https://github.com/zylo117/Yet-Another-EfficientDet-Pytorch/releases/tag/1.0) and finetune on the datasets provided above. I use a two-step training process, where in the first step the [EfficentNet backbone](https://arxiv.org/pdf/1905.11946.pdf) is frozen and only the head, i.e. the BiFPN layers as well as the 
 Class/Box prediction net layers are trained. In the second step also the backbone layers are trainable. Provided below are the detailed training parameters for each CharacterDet downloadable from [here](https://github.com/DominikLindorfer/Efficient-CharacterDet/releases). All other parameters are chosen according to the [EfficientDet paper](https://arxiv.org/abs/1911.09070). Training is conducted on a single A100 40GB GPU.
 
-TABLE
+**Example**
+
+```python
+python train.py -c 0 -p numbers --head_only True --lr 5e-3 --batch_size 16 --load_weights weights/efficientdet-d0.pth --num_epochs 20 --save_interval 100
+python train.py -c 0 -p numbers --head_only False --lr 1e-3 --batch_size 16 --load_weights last  --num_epochs 35 --save_interval 100
+```
 
 Tensorboard training-logs are provided [here](./logs). Please note that the snapshots provided above correspond to the respective step in these logs.
 
