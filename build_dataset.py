@@ -22,7 +22,7 @@ canvas_size = 512
 img_size_x, img_size_y = 18 * 2, 25 * 2
 input_folder = "./images/"
 output_folder = "./datasets/numbers/"
-visualize = True
+visualize = False   #Visualize created images, bounding Boxes etc
 
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
