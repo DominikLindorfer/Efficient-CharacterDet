@@ -2,7 +2,7 @@
 
 Are you tired using [tesseract](https://github.com/tesseract-ocr/tesseract) as your OCR engine? This repository provides a hackable [PyTorch](https://pytorch.org/) version of [EfficientDet](https://arxiv.org/abs/1911.09070) to detect characters, i.e. digits, letters and special symbols in numbers and words, within an image.
 <p align="center">
-  <img src="https://github.com/DominikLindorfer/BloombergReader/blob/main/bbg_screenshots/Promo.png" width="900">
+  <img src="https://github.com/DominikLindorfer/Efficient-CharacterDet/blob/master/assets/promo.png" width="900">
 </p>
 
 ### Datasets
@@ -10,7 +10,7 @@ Are you tired using [tesseract](https://github.com/tesseract-ocr/tesseract) as y
 For CharacterDet different datasets consisting of *512x512px* images with numbers, numbers with special characters and numbers, special characters and letters are given [here](./datasets/). Each dataset is created using the files [build_dataset.py](build_dataset.py) and [build_dataset_letters.py](/build_dataset_letters.py) where the latter is a more complex and advanced version of the former.
 
 <p align="center">
-  <img src="https://github.com/DominikLindorfer/BloombergReader/blob/main/bbg_screenshots/dataset_creation.png" width="700">
+  <img src="https://github.com/DominikLindorfer/Efficient-CharacterDet/blob/master/assets/dataset_creation.png" width="700">
 </p>
 
 The total number of training/validation images is controlled using the parameters *total_ds_pics_train* and *total_ds_pics_train*. The size of the background canvas is controlled by 
@@ -20,7 +20,7 @@ Please note that both the numbers and the letters datasets employ a horizontal a
 while it is variable in the latter, as shown below.
 
 <p align="center">
-  <img src="https://github.com/DominikLindorfer/BloombergReader/blob/main/bbg_screenshots/Dataset_Difference.png" width="500">
+  <img src="https://github.com/DominikLindorfer/Efficient-CharacterDet/blob/master/assets/dataset_difference.png" width="500">
 </p>
 
 This project uses the standard anchor scales/ratios as well as RGB mean and std used for by EfficientDet for COCO [given in the projects/*.yaml files](./projects). Obviously, these values do not reflect the datasets given here and a faster convergence or better loss could be found by optimizing these values. In my experiments (not shown in this repo) I did not achieve a better result playing with these values and for unclear reasons finding the anchor-ratios using [kmeans-anchros-ratios](https://github.com/mnslarcher/kmeans-anchors-ratios) failed to converge for me.
@@ -40,7 +40,7 @@ python train.py -c 0 -p numbers --head_only False --lr 1e-3 --batch_size 16 --lo
 Tensorboard training-logs are provided [here](./logs). Please note that the snapshots provided above correspond to the respective step in these logs.
 
 <p align="left">
-  <img src="https://github.com/DominikLindorfer/BloombergReader/blob/main/video/Tensorboard_Loss_Ultra.png" width="650">
+  <img src="https://github.com/DominikLindorfer/Efficient-CharacterDet/blob/master/assets/tb_loss.png" width="650">
 </p>
 
 # References
